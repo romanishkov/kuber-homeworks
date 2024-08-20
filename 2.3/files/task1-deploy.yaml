@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task1-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: my-index
+          mountPath: /usr/share/nginx/html
+      - name: network-multitool
+        image: wbitt/network-multitool
+        env:
+        - name: HTTP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: task1-configmap
+              key: multitool_http
+        - name: HTTPS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: task1-configmap
+              key: multitool_https
+        ports:
+        - containerPort: 1180
+          name: http-port
+        - containerPort: 11443
+          name: https-port
+      volumes:
+        - name: my-index
+          configMap:
+            name: task1-configmap
+            items:
+              - key: index.html
+                path: index.html

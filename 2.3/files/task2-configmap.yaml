@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: task2-configmap
+data:
+  index.html: |
+    <html>
+    <head>
+      <title>Welcome to Secure KubeNginx</title>
+    </head>
+    <body>
+      <h1>It works in k8s and using TLS!</h1>
+      <p>WOW!!! very secret!!</p>
+    </body>
+    </html>
