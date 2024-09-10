@@ -1,0 +1,25 @@
+apiVersion: crd.projectcalico.org/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-front2back
+  namespace: app
+spec:
+  selector: app == 'backend'
+  types:
+    - Ingress
+    - Egress
+  ingress:
+    - action: Allow
+      metadata:
+        annotations:
+          from: frontend
+          to: backend
+      protocol: TCP
+      source:
+        selector: app == 'frontend'
+      destination:
+        ports:
+          - 80
+          - 443
+  egress:
+    - action: Allow

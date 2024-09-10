@@ -1,0 +1,25 @@
+apiVersion: crd.projectcalico.org/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-back2cache
+  namespace: app
+spec:
+  selector: app == 'cache'
+  types:
+    - Ingress
+    - Egress
+  ingress:
+    - action: Allow
+      metadata:
+        annotations:
+          from: backend
+          to: cache
+      protocol: TCP
+      source:
+        selector: app == 'backend'
+      destination:
+        ports:
+          - 80
+          - 443
+  egress:
+    - action: Allow
